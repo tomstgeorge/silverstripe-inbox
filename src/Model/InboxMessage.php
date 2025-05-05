@@ -163,15 +163,32 @@ class InboxMessage
 
         if ($this->Content) {
             $lists[] = [
+                'Key' => 'message',
                 'Title' => _t('Inbox.MESSAGE', 'Message'),
-                'PlainContent' => 1,
-                'Content' => $this->renderWith('Includes/Message')
             ];
         }
 
         $this->extend('extraTabs', $lists);
 
         return new ArrayList($lists);
+    }
+
+    public function getObjectTabContent($tabKey, $page = 1) {
+        switch ($tabKey) {
+            case 'message':
+                if ($this->Content) {
+                    return $this->renderWith('Includes/Message');
+                }
+                break;
+
+            default:
+                $results = $this->extend('extraTabContent', $tabKey);
+                if (!empty($results)) {
+                    return $results[0];
+                }
+        }
+
+        return '';
     }
 
     public function getObjectTitle() {
